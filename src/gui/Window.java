@@ -94,7 +94,7 @@ public class Window extends JFrame implements MouseListener{
 				
 				String path = "faka.png";
 				if(w!=null) {path = w.toString()+".png";}
-				buts.get(i*8+j).setIcon(new ImageIcon(path));;
+				buts.get(i*8+j).setIcon(new ImageIcon("images/"+path));;
 			}
 			//System.out.println();
 			
