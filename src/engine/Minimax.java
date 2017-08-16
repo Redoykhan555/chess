@@ -57,19 +57,25 @@ public class Minimax{
 			fs.add(temp);
 		}
 		executor.shutdown();
+		ArrayList <Node> possb = new ArrayList<Node> ();
 		try {
 			executor.awaitTermination((long) 99999999, TimeUnit.SECONDS);
 			for(int i=0;i<fs.size();i++) {
 				int tt = fs.get(i).get();
 				if(tt<a) {
 					a = tt;
-					ans = childs.get(i);
+					possb.clear();possb.add(childs.get(i));
+				}
+				else if(tt==a) {
+					possb.add(childs.get(i));
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return ans;
+		if(possb.isEmpty()) return null;
+		int randomNum = ThreadLocalRandom.current().nextInt(0, 101)%possb.size();
+		return possb.get(randomNum);
 	}
 	
 }
