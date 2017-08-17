@@ -77,20 +77,21 @@ public class State implements Node,Serializable{
 
 	
 	private boolean terminal() {
+		int d=0;
 		for(int i=1;i<=8;i++) {
 			for(int j=1;j<=8;j++) {
 				Warrior w = this.board[i-1][j-1];
-				if(w!=null && w.c==c && w.w==2) return false;
+				if(w!=null && w.w==2) d++;
 			}
 		}
 		//System.out.println("TERMINATED");
-		return true;
+		return d<2;
 	}
 	public int heuristic() {
-		/*if(terminal()) {
+		if(terminal()) {
 			if(this.c=='w') return -inf;
 			if(this.c=='b') return inf;
-		}*/
+		}
 		
 		int ans = 0;
 		for(int i=1;i<=8;i++) {
@@ -100,8 +101,7 @@ public class State implements Node,Serializable{
 				if(w.c=='w') ans += w.w;
 				if(w.c=='b') ans -= w.w;
 			}
-		}
-		
+		}	
 		return ans;
 	}
 

@@ -14,6 +14,7 @@ public class Minimax{
 			
 			for(Node child:state.children()) {
 				bestVal = max(bestVal,minimax(state,child,depth-1));
+				if(bestVal==inf) return inf;
 				state.setAlpha(max(state.getAlpha(),bestVal));
 				if(parent!=null && parent.getBeta()<=state.getAlpha()) break;
 			}
@@ -22,6 +23,7 @@ public class Minimax{
 			bestVal = inf;
 			for(Node child:state.children()) {
 				bestVal = min(bestVal,minimax(state,child,depth-1));
+				if(bestVal==-inf) return -inf;
 				state.setBeta(min(state.getBeta(),bestVal));
 				if(parent!=null && state.getBeta()<=parent.getAlpha()) break;
 			}
@@ -62,9 +64,11 @@ public class Minimax{
 			executor.awaitTermination((long) 99999999, TimeUnit.SECONDS);
 			for(int i=0;i<fs.size();i++) {
 				int tt = fs.get(i).get();
+				System.out.println("Eval :"+tt);
 				if(tt<a) {
 					a = tt;
-					possb.clear();possb.add(childs.get(i));
+					possb.clear();
+					possb.add(childs.get(i));
 				}
 				else if(tt==a) {
 					possb.add(childs.get(i));

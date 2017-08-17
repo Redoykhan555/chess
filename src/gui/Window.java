@@ -46,7 +46,7 @@ public class Window extends JFrame implements MouseListener{
 				b.setSize(40,18);
 				b.setVisible(true);
 				if(y) b.setBackground(new Color(255,255,255));
-				else b.setBackground(new Color(10,10,10));
+				else b.setBackground(new Color(30,50,10));
 				add(b);
 				buts.put(i*8+j, b);
 			}
