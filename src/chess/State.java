@@ -10,12 +10,18 @@ public class State implements Node{
 	public Character c;
 	int inf = 99999999;
 	int alpha=-inf,beta = inf;
+	Character kingNai = null;
 	
 	Warrior[][] board = new Warrior[8][8];
 	
 	public State(Warrior[][] board,Character c) {
 		this.board = board;
 		this.c=c;
+	}
+	public State(Warrior[][] board,Character c,Character kingless) {
+		this.board = board;
+		this.c=c;
+		this.kingNai = kingless;
 	}
 	public ArrayList<State> children(int x){
 		ArrayList<Move> ans = new ArrayList<Move>();
@@ -40,13 +46,13 @@ public class State implements Node{
 	public ArrayList<State> children(){
 		ArrayList<Move> ans = new ArrayList<Move>();
 		ArrayList<State> temp = new ArrayList<State>();
-		for(int i=1;i<=8;i++) {
-			for(int j=1;j<=8;j++) {
-				Warrior w = board[i-1][j-1];
+		for(int i=0;i<8;i++) {
+			for(int j=0;j<8;j++) {
+				Warrior w = board[i][j];
 				if (!(w!=null && w.c==this.c)) continue;
 				ArrayList<Pos> s = w.moves(board);
 				for (Pos p:s) {
-					ans.add(new Move(new Pos(i,j),p));
+					ans.add(new Move(new Pos(i+1,j+1),p));
 				}
 			}
 		}
@@ -58,16 +64,18 @@ public class State implements Node{
 	
 	State upd(Move m) {
 		Warrior[][] brd = new Warrior[8][8];
-		for(int i=1;i<=8;i++) {
-			for (int j=1;j<=8;j++) {
-				brd[i-1][j-1] = board[i-1][j-1];
+		for(int i=0;i<8;i++) {
+			for (int j=0;j<8;j++) {
+				brd[i][j] = board[i][j];
 			}
 		}
 
 		Pos prev = m.from,nxt = m.to;
 		Warrior w = brd[prev.x-1][prev.y-1];
+		Warrior nw = brd[nxt.x-1][nxt.y-1];
 		brd[nxt.x-1][nxt.y-1]=w;
 		brd[prev.x-1][prev.y-1]= null;
+		if(nw!=null && nw.w==2) return new State(brd,(char)(217-this.c),nw.c);
 		return new State(brd,(char)(217-this.c));
 	}
 	public boolean maxPlayer() {
@@ -75,33 +83,20 @@ public class State implements Node{
 	}
 
 	public boolean terminated() {
-		int d=0;
-		for(int i=1;i<=8;i++) {
-			for(int j=1;j<=8;j++) {
-				Warrior w = this.board[i-1][j-1];
-				if(w!=null && w.w==2) d++;
-			}
-		}
-		return d<2;
+		return kingNai!=null;
 	}
 	
 	private boolean noKing(char ch) {
-		for(int i=1;i<=8;i++) {
-			for(int j=1;j<=8;j++) {
-				Warrior w = this.board[i-1][j-1];
-				if(w!=null && w.c==ch && w.w==2) return false;
-			}
-		}
-		return true;
+		return (kingNai!=null && kingNai==ch);
 	}
 	public int heuristic() {
 		if(noKing('w'))  return -inf;
 		if(noKing('b')) return inf;
 		
 		int ans = 0;
-		for(int i=1;i<=8;i++) {
-			for(int j=1;j<=8;j++) {
-				Warrior w = this.board[i-1][j-1];
+		for(int i=0;i<8;i++) {
+			for(int j=0;j<8;j++) {
+				Warrior w = this.board[i][j];
 				if(w==null) continue;
 				if(w.c=='w') ans += w.w;
 				if(w.c=='b') ans -= w.w;
