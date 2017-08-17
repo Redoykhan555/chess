@@ -4,9 +4,11 @@ import java.util.concurrent.*;
 
 public class Minimax{
 	static int inf = 99999999;
+	static int count = 0;
 	
 	static int minimax(Node parent,Node state,int depth) {
-		if(depth==0) {
+		count++;
+		if(depth==0 || state.terminated()) {
 			return state.heuristic();
 		}
 		int bestVal = -inf;
@@ -14,7 +16,6 @@ public class Minimax{
 			
 			for(Node child:state.children()) {
 				bestVal = max(bestVal,minimax(state,child,depth-1));
-				if(bestVal==inf) return inf;
 				state.setAlpha(max(state.getAlpha(),bestVal));
 				if(parent!=null && parent.getBeta()<=state.getAlpha()) break;
 			}
@@ -23,7 +24,6 @@ public class Minimax{
 			bestVal = inf;
 			for(Node child:state.children()) {
 				bestVal = min(bestVal,minimax(state,child,depth-1));
-				if(bestVal==-inf) return -inf;
 				state.setBeta(min(state.getBeta(),bestVal));
 				if(parent!=null && state.getBeta()<=parent.getAlpha()) break;
 			}
@@ -42,14 +42,12 @@ public class Minimax{
 	}
 
 	public static Node go(Node state) {
-		//System.out.println("GO"+state.maxPlayer());
-		int a = inf-99;
-		Node ans = null;
+		int a = inf;
 		ArrayList<? extends Node> childs = state.children();
 
-		int al,be;
 		ArrayList <Future<Integer>> fs = new ArrayList <Future<Integer>>();
 		ExecutorService executor = Executors.newFixedThreadPool(4);
+		
 		for(Node child:childs) {
 			Future<Integer> temp = executor.submit(new Callable<Integer>() {
 				public Integer call() {
@@ -77,7 +75,9 @@ public class Minimax{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		if(possb.isEmpty()) return null;
+		System.out.println("Childs:"+fs.size()+", Count:"+count);
+		count = 0;
+		if(possb.isEmpty()||a==inf) return null;
 		int randomNum = ThreadLocalRandom.current().nextInt(0, 101)%possb.size();
 		return possb.get(randomNum);
 	}

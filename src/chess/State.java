@@ -1,13 +1,12 @@
 package chess;
 
-import java.io.Serializable;
+
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import engine.Node;
 
 
-public class State implements Node,Serializable{
+public class State implements Node{
 	public Character c;
 	int inf = 99999999;
 	int alpha=-inf,beta = inf;
@@ -75,8 +74,7 @@ public class State implements Node,Serializable{
 		return this.c=='w';
 	}
 
-	
-	private boolean terminal() {
+	public boolean terminated() {
 		int d=0;
 		for(int i=1;i<=8;i++) {
 			for(int j=1;j<=8;j++) {
@@ -84,14 +82,21 @@ public class State implements Node,Serializable{
 				if(w!=null && w.w==2) d++;
 			}
 		}
-		//System.out.println("TERMINATED");
 		return d<2;
 	}
-	public int heuristic() {
-		if(terminal()) {
-			if(this.c=='w') return -inf;
-			if(this.c=='b') return inf;
+	
+	private boolean noKing(char ch) {
+		for(int i=1;i<=8;i++) {
+			for(int j=1;j<=8;j++) {
+				Warrior w = this.board[i-1][j-1];
+				if(w!=null && w.c==ch && w.w==2) return false;
+			}
 		}
+		return true;
+	}
+	public int heuristic() {
+		if(noKing('w'))  return -inf;
+		if(noKing('b')) return inf;
 		
 		int ans = 0;
 		for(int i=1;i<=8;i++) {

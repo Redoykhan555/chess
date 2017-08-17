@@ -8,6 +8,7 @@ public interface Node {
 	public int getBeta();
 	public void setBeta(int x);
 	public boolean maxPlayer();
+	public boolean terminated();
 	public ArrayList<? extends Node> children ();
 	public ArrayList<? extends Node> children (int p);
 	public int heuristic();

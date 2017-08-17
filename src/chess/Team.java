@@ -19,10 +19,10 @@ public class Team {
 		}
 		board[p-1][0]=new Rook(this.c,4);
 		board[p-1][7]=new Rook(this.c,4);
-		board[p-1][1]=new Knight(this.c,4);
-		board[p-1][6]=new Knight(this.c,4);
-		board[p-1][2]=new Bishop(this.c,4);
-		board[p-1][5]=new Bishop(this.c,4);
+		board[p-1][1]=new Knight(this.c,3);
+		board[p-1][6]=new Knight(this.c,3);
+		board[p-1][2]=new Bishop(this.c,3);
+		board[p-1][5]=new Bishop(this.c,3);
 		board[p-1][3]=new Queen(this.c,8);
 		board[p-1][4]=new King(this.c,2);
 	}
