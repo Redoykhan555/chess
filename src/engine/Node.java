@@ -10,6 +10,5 @@ public interface Node {
 	public boolean maxPlayer();
 	public boolean terminated();
 	public ArrayList<? extends Node> children ();
-	public ArrayList<? extends Node> children (int p);
 	public int heuristic();
 }

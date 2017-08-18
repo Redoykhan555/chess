@@ -23,39 +23,21 @@ public class State implements Node{
 		this.c=c;
 		this.kingNai = kingless;
 	}
-	public ArrayList<State> children(int x){
-		ArrayList<Move> ans = new ArrayList<Move>();
-		ArrayList<State> temp = new ArrayList<State>();
-		for(int i=1;i<=8;i++) {
-			for(int j=1;j<=8;j++) {
-				Warrior w = board[i-1][j-1];
-				if (!(w!=null && w.c==this.c)) continue;
-				ArrayList<Pos> s = w.moves(board);
-				System.out.println(i+","+j+" : "+s.size());
-				for (Pos p:s) {
-					ans.add(new Move(new Pos(i,j),p));
-				}
-			}
-		}
-		for(Move m:ans) {
-			//System.err.println(m.from + "to" + m.to);
-			temp.add(upd(m));
-		}
-		return temp;
-	}
+
 	public ArrayList<State> children(){
+		//Pawn Promotion
+		int lastRow = 8;
+		if(this.c=='b') lastRow = 1;
 		ArrayList<Move> ans = new ArrayList<Move>();
 		ArrayList<State> temp = new ArrayList<State>();
 		for(int i=0;i<8;i++) {
 			for(int j=0;j<8;j++) {
 				Warrior w = board[i][j];
 				if (!(w!=null && w.c==this.c)) continue;
-				ArrayList<Pos> s = w.moves(board);
-				for (Pos p:s) {
-					ans.add(new Move(new Pos(i+1,j+1),p));
-				}
+				ArrayList<Move> s = w.moves(board);
+				ans.addAll(s);
 			}
-		}
+		}	
 		for(Move m:ans) {
 			temp.add(upd(m));
 		}
@@ -75,6 +57,21 @@ public class State implements Node{
 		Warrior nw = brd[nxt.x-1][nxt.y-1];
 		brd[nxt.x-1][nxt.y-1]=w;
 		brd[prev.x-1][prev.y-1]= null;
+		
+		if(m.type==1) {
+			brd[nxt.x-1][nxt.y-1]=null;
+			
+			if(m.c=='q') {brd[nxt.x-1][nxt.y-1]= new Queen(this.c,8);}
+			if(m.c=='b') {brd[nxt.x-1][nxt.y-1]= new Bishop(this.c,3);}
+			if(m.c=='k') {brd[nxt.x-1][nxt.y-1]= new Knight(this.c,3);}
+			if(m.c=='r') {brd[nxt.x-1][nxt.y-1]= new Rook(this.c,4);}
+			System.out.println("PROMOTION:"+m.c+" "+brd[nxt.x-1][nxt.y-1]);
+		}
+		
+		else if(m.type==2) {
+			//Castling
+		}
+		
 		if(nw!=null && nw.w==2) return new State(brd,(char)(217-this.c),nw.c);
 		return new State(brd,(char)(217-this.c));
 	}

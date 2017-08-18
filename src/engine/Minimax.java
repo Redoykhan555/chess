@@ -51,7 +51,7 @@ public class Minimax{
 		for(Node child:childs) {
 			Future<Integer> temp = executor.submit(new Callable<Integer>() {
 				public Integer call() {
-					return minimax(null,child,4);
+					return minimax(null,child,3);
 				}
 			});
 			fs.add(temp);
