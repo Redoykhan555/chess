@@ -7,8 +7,9 @@ public class Minimax{
 	static int count = 0;
 	
 	static int minimax(Node parent,Node state,int depth) {
-		count++;
+		
 		if(depth==0 || state.terminated()) {
+			count++;
 			return state.heuristic();
 		}
 		int bestVal = -inf;
@@ -62,7 +63,7 @@ public class Minimax{
 			executor.awaitTermination((long) 99999999, TimeUnit.SECONDS);
 			for(int i=0;i<fs.size();i++) {
 				int tt = fs.get(i).get();
-				System.out.println("Eval :"+tt);
+				//System.out.println("Eval :"+tt);
 				if(tt<a) {
 					a = tt;
 					possb.clear();
